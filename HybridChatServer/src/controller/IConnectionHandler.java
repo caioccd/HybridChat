@@ -1,9 +1,9 @@
 package controller;
 
-import java.net.Socket;
+import java.io.*;
 
 public interface IConnectionHandler {
 	
-	public void HandleConnection(Socket socket);
+	public void HandleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream);
 
 }

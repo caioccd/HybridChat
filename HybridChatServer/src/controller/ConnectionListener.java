@@ -23,7 +23,9 @@ public class ConnectionListener implements Runnable {
 		keepListening = true;
 		try {
 			while (keepListening) {
-				connectionHandler.HandleConnection(serverSocket.accept());
+				Socket socket = serverSocket.accept();
+				connectionHandler.HandleConnection(socket.getInetAddress().getHostName(), socket.getInputStream(), socket.getOutputStream());
+				socket.close();
 			}
 		}
 		catch (IOException e) {
