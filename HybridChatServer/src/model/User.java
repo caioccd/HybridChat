@@ -1,35 +1,89 @@
 package model;
 
-public class User {
-	private String name;
-	private int IPAddress;
-	private boolean isActive;
+import java.io.*;
+import java.util.*;
 
-	public User() {
-		super();
-	}
-	public User(String name, int IPAddress, boolean isActive) {
-		super();
+public class User implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9019686643378707326L;
+	
+	private String name;
+	private String IPAddress;
+	private boolean isActive;
+	private List<String> friends;
+	
+	public User(String name, String IPAddress, boolean isActive) {
 		this.name = name;
 		this.IPAddress = IPAddress;
 		this.isActive = isActive;
+		this.friends = new ArrayList<String>();
 	}
+	
+	public User(String name) {
+		this.name = name;
+		this.IPAddress = null;
+		this.isActive = false;
+		this.friends = new ArrayList<String>();
+	}
+	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getIPAddress() {
+	
+	public String getIPAddress() {
 		return IPAddress;
 	}
-	public void setIPAddress(int IPAddress) {
+	
+	public void setIPAddress(String IPAddress) {
 		this.IPAddress = IPAddress;
 	}
+	
 	public boolean isActive() {
 		return isActive;
 	}
+	
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public List<String> getAllFriends() {
+		return friends;
+	}
+	
+	public void addFriend(String name) {
+		friends.add(name);
+	}
+	
+	public void removeFriend(String name) {
+		friends.remove(name);
+	}
+	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.writeUTF(name);
+		out.writeUTF(IPAddress);
+		out.writeBoolean(isActive);
+		
+		out.writeInt(friends.size());
+		for (String friend : friends) {
+			out.writeUTF(friend);
+		}
+	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		name = in.readUTF();
+		IPAddress = in.readUTF();
+		isActive = in.readBoolean();
+		
+		int friendsCount = in.readInt();
+		friends = new ArrayList<String>();
+		for (int i = 0; i < friendsCount; i++) {
+			friends.add(in.readUTF());
+		}
 	}
 }

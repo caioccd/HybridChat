@@ -5,10 +5,9 @@ import java.util.Scanner;
 import controller.ServerConnector;
 
 public class Main {
-
-	public static void main(String[] args) {
+	
+	public static void test() {
 		ServerConnector serverConnection = new ServerConnector("127.0.0.1", 1234);
-		
 		
 		Scanner keyboard = new Scanner(System.in);
 		
@@ -25,6 +24,10 @@ public class Main {
 		
 		keyboard.close();
 		serverConnection.close();
+	}
+
+	public static void main(String[] args) {
+
 	}
 
 }

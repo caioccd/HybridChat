@@ -3,17 +3,22 @@ package controller;
 import java.io.*;
 import java.util.Scanner;
 
-public class TestConnectionHandler implements IConnectionHandler {
 
-	public TestConnectionHandler() {
+public class ConnectionHandler implements IConnectionHandler {
+
+	public ConnectionHandler() {
 		super();
 	}
 	
 	public void HandleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {		
 		Scanner scanner = new Scanner(inputStream);
 		
-		while (scanner.hasNextLine()) {
-			System.out.printf("%s: %s\n", IPAddress, scanner.nextLine());
+		while (scanner.hasNextInt()) {
+			switch (scanner.nextInt()) {
+			case CMD_REGISTER_USER:
+				
+				break;
+			}
 		}
 		
 		scanner.close();
