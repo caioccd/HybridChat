@@ -15,7 +15,7 @@ public class ConnectionListener implements Runnable {
 			this.connectionHandler = connectionHandler;
 		}
 		catch (IOException e) {
-			System.err.printf("An error ocurred while initializing a server socket on port %d.", port);
+			System.err.printf("An error ocurred while initializing a server socket on port %d.\n", port);
 		}
 	}
 
@@ -28,14 +28,14 @@ public class ConnectionListener implements Runnable {
 		}
 		catch (IOException e) {
 			keepListening = false;
-			System.err.printf("An error ocurred while accepting a connection.");
+			System.err.println("An error ocurred while accepting a connection.");
 		}
 		finally {
 			try {
 				serverSocket.close();
 			}
 			catch (IOException e) {
-				System.err.printf("An error ocurred while closing a server socket.");
+				System.err.println("An error ocurred while closing a server socket.");
 			}
 		}
 	}

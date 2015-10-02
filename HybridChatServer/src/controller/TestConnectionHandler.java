@@ -12,20 +12,21 @@ public class TestConnectionHandler implements IConnectionHandler {
 	
 	public void HandleConnection(Socket socket) {		
 		Scanner scanner = null;
+		String hostAddress = socket.getInetAddress().getHostAddress();
 		try {
 			scanner = new Scanner(socket.getInputStream());
 			while (scanner.hasNextLine()) {
-			  System.out.println(scanner.nextLine());
+			  System.out.printf("%s: %s\n", hostAddress, scanner.nextLine());
 			}
 		} catch (IOException e) {
-			System.err.printf("An error ocurred while accepting a connection.");
+			System.err.println("An error ocurred while accepting a connection.");
 		}
 		finally {
 			try {
 				socket.close();
 			}
 			catch (IOException e) {
-				System.err.printf("An error ocurred while closing a server socket.");
+				System.err.println("An error ocurred while closing a server socket.");
 			}
 			scanner.close();
 		}
