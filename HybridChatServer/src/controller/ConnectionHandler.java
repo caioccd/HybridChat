@@ -14,11 +14,11 @@ public class ConnectionHandler implements IConnectionHandler {
 		Scanner scanner = new Scanner(inputStream);
 		
 		while (scanner.hasNextInt()) {
-			switch (scanner.nextInt()) {
+			/*switch (scanner.nextInt()) {
 			case CMD_REGISTER_USER:
 				
 				break;
-			}
+			}*/
 		}
 		
 		scanner.close();
