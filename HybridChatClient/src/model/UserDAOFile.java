@@ -10,16 +10,19 @@ public class UserDAOFile implements IUserDAO, Serializable {
 	private HashMap<String, User> userHashMap;
 	
 	public UserDAOFile(String databaseFilePath) {
+		userHashMap = new HashMap<String, User>();
 		this.databaseFilePath = databaseFilePath;
 		
 		ObjectInputStream inputStream = null;
 	    try {
-	    	inputStream = new ObjectInputStream(new FileInputStream(databaseFilePath));
-			readObject(inputStream);
-			inputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+	    	File databaseFile = new File(databaseFilePath);
+	    	if (databaseFile.length() > 0) {
+		    	inputStream = new ObjectInputStream(new FileInputStream(databaseFile));
+				readObject(inputStream);
+				inputStream.close();
+	    	}
+	    	
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -38,40 +41,55 @@ public class UserDAOFile implements IUserDAO, Serializable {
 	public List<User> getAllUsers() {
 		return new ArrayList<User>(userHashMap.values());
 	}
+	
+	public boolean exists(String name) {
+		return userHashMap.containsKey(name);
+	}
 
 	public User getUser(String name) {
 		return userHashMap.get(name);
 	}
+	
+	public List<User> getFriendsOf(String name) {
+		ArrayList<User> fullFriendsList = new ArrayList<User>();
+		
+		if (!this.exists(name)) {
+			List<String> friends = this.getUser(name).getAllFriends();
+			for (String friend : friends) {
+				fullFriendsList.add(this.getUser(friend));
+			}
+		}
+		
+		return fullFriendsList;
+	}
 
 	public void updateUser(User user) {
-		userHashMap.put(user.getName(), user);
-		saveUserDAOFile();
+		if (this.exists(user.getName())) {
+			userHashMap.put(user.getName(), user);
+			saveUserDAOFile();
+		}
 	}
 
 	public void addUser(User user) {
-		userHashMap.put(user.getName(), user);
-		saveUserDAOFile();
+		if (!this.exists(user.getName())) {
+			userHashMap.put(user.getName(), user);
+			saveUserDAOFile();
+		}
 	}
 
 	public void deleteUser(String name) {
-		userHashMap.remove(name);
-		saveUserDAOFile();
+		if (this.exists(name)) {
+			userHashMap.remove(name);
+			saveUserDAOFile();
+		}
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeInt(userHashMap.size());
-		
-		for(User user : userHashMap.values()) {
-			out.writeObject(user);
-		}
+		out.writeObject(userHashMap);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		int usersCount = in.readInt();
-		userHashMap = new HashMap<String, User>();
-		for (int i = 0; i < usersCount; i++) {
-			User user = (User)in.readObject();
-			userHashMap.put(user.getName(), user);
-		}
+		userHashMap = (HashMap<String, User>)in.readObject();
 	}
 }

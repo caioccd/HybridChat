@@ -68,22 +68,14 @@ public class User implements Serializable {
 		out.writeUTF(name);
 		out.writeUTF(IPAddress);
 		out.writeBoolean(isActive);
-		
-		out.writeInt(friends.size());
-		for (String friend : friends) {
-			out.writeUTF(friend);
-		}
+		out.writeObject(friends);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		name = in.readUTF();
 		IPAddress = in.readUTF();
 		isActive = in.readBoolean();
-		
-		int friendsCount = in.readInt();
-		friends = new ArrayList<String>();
-		for (int i = 0; i < friendsCount; i++) {
-			friends.add(in.readUTF());
-		}
+		friends = (List<String>)in.readObject();
 	}
 }
