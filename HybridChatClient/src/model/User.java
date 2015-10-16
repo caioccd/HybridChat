@@ -61,12 +61,16 @@ public class User implements Serializable {
 	}
 	
 	public User addFriend(String name) {
-		friends.add(name);
+		if (!friends.contains(name)) {
+			friends.add(name);
+		}
 		return this;
 	}
 	
 	public User removeFriend(String name) {
-		friends.remove(name);
+		if (friends.contains(name)) {
+			friends.remove(name);
+		}
 		return this;
 	}
 	
