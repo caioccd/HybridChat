@@ -40,6 +40,17 @@ public class UserDAOFile implements IUserDAO, Serializable {
 	public User getUser(String name) {
 		return userHashMap.get(name);
 	}
+	
+	public List<User> getFriendsOf(String name) {
+		List<String> friends = this.getUser(name).getAllFriends();
+		
+		ArrayList<User> fullFriendsList = new ArrayList<User>();
+		for (String friend : friends) {
+			fullFriendsList.add(this.getUser(friend));
+		}
+		
+		return fullFriendsList;
+	}
 
 	public void updateUser(User user) {
 		userHashMap.put(user.getName(), user);
