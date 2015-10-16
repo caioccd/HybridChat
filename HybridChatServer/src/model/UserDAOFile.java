@@ -53,7 +53,7 @@ public class UserDAOFile implements IUserDAO, Serializable {
 	public List<User> getFriendsOf(String name) {
 		ArrayList<User> fullFriendsList = new ArrayList<User>();
 		
-		if (!this.exists(name)) {
+		if (this.exists(name)) {
 			List<String> friends = this.getUser(name).getAllFriends();
 			for (String friend : friends) {
 				fullFriendsList.add(this.getUser(friend));

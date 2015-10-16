@@ -12,6 +12,7 @@ public class ConnectionListener implements Runnable {
     public ConnectionListener(int port, IConnectionHandler connectionHandler) {
         try {
             this.serverSocket = new ServerSocket(port);
+            this.serverSocket.setSoTimeout(3600000);
             this.connectionHandler = connectionHandler;
         } catch (IOException e) {
             System.err.printf("An error ocurred while initializing a server socket on port %d.\n", port);

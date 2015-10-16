@@ -10,6 +10,7 @@ public class ServerConnector {
     public ServerConnector(String IPAddress, int port) {
         try {
             clientSocket = new Socket(IPAddress, port);
+            clientSocket.setSoTimeout(3600000);
         } catch (IOException e) {
             System.err.printf("An error ocurred while connecting to %s:%d.\n", IPAddress, port);
         }

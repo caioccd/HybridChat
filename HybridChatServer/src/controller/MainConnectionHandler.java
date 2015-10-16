@@ -5,36 +5,28 @@
  */
 package controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
+import java.io.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.User;
-import model.UserDAOFile;
+
+import model.*;
 import util.Util;
 
 public class MainConnectionHandler implements IConnectionHandler {
 
     private UserDAOFile userDao;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
 
     public MainConnectionHandler() {
         userDao = new UserDAOFile(Util.daoFilePath);
     }
 
     public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {
-        setupStreams(inputStream, outputStream);
 
     	String userName = null;
     	String friendName = null;
         try {
-        	int command = input.readInt();
+        	DataInputStream input = new DataInputStream(inputStream);
+        	
+         	int command = input.readInt();
         	switch (command) {
     			case Util.GET_FRIENDS_LIST_COMMAND:
     				userName = input.readUTF();
@@ -45,8 +37,10 @@ public class MainConnectionHandler implements IConnectionHandler {
     				else {
         	            userDao.addUser(new User(userName, IPAddress));
     				}
-    				
-    				output.writeObject(userDao.getFriendsOf(userName));
+
+    	        	ObjectOutputStream output = new ObjectOutputStream(outputStream);
+    	        	List<User> users = userDao.getFriendsOf(userName);
+    	        	output.writeObject(users);
     			break;
     			
         		case Util.ADD_FRIEND_COMMAND:
@@ -55,7 +49,7 @@ public class MainConnectionHandler implements IConnectionHandler {
 
         			if (userDao.exists(userName) && userDao.exists(friendName)) {
         				userDao.updateUser(userDao.getUser(userName).addFriend(friendName).updateLastConnection());
-        				userDao.updateUser(userDao.getUser(friendName).addFriend(userName).updateLastConnection());
+        				userDao.updateUser(userDao.getUser(friendName).addFriend(userName));
         			}
         		break;
         		
@@ -63,9 +57,9 @@ public class MainConnectionHandler implements IConnectionHandler {
         			userName = input.readUTF();
         			friendName = input.readUTF();
         			
-        			if (userDao.exists(userName) && userDao.exists(friendName)) {	
+        			if (userDao.exists(userName) && userDao.exists(friendName)) {
         				userDao.updateUser(userDao.getUser(userName).removeFriend(friendName).updateLastConnection());
-        				userDao.updateUser(userDao.getUser(friendName).removeFriend(userName).updateLastConnection());
+        				userDao.updateUser(userDao.getUser(friendName).removeFriend(userName));
         			}
         		break;
         	}
@@ -74,20 +68,6 @@ public class MainConnectionHandler implements IConnectionHandler {
 			e.printStackTrace();
         }
 
-    }
-
-    private void setupStreams(InputStream inputStream, OutputStream outputStream) {
-        try {
-            output = new ObjectOutputStream(outputStream);
-            output.flush();
-            input = new ObjectInputStream(inputStream);
-        } catch (IOException e) {
-			e.printStackTrace();
-        }
-    }
-    
-   
-
-   
+    } 
 
 }
