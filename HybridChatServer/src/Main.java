@@ -1,11 +1,12 @@
-import controller.TestConnectionHandler;
+import util.Util;
 import controller.ConnectionListener;
+import controller.MainConnectionHandler;
 
 public class Main {
 	//main
 	public static void main(String[] args) {
-		TestConnectionHandler testHandler = new TestConnectionHandler();
-		ConnectionListener connectionListener = new ConnectionListener(1234, testHandler);
+		MainConnectionHandler mainHandler = new MainConnectionHandler();
+		ConnectionListener connectionListener = new ConnectionListener(Util.SERVER_PORT, mainHandler);
 		connectionListener.run();
 	}
 }

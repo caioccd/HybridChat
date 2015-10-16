@@ -22,7 +22,6 @@ public class ConnectionListener implements Runnable {
         keepListening = true;
         try {
             while (keepListening) {
-
                 Socket socket = serverSocket.accept();
 
                 connectionHandler.handleConnection(socket.getInetAddress().getHostAddress(), socket.getInputStream(), socket.getOutputStream());

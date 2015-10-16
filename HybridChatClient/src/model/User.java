@@ -1,6 +1,7 @@
 package model;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class User implements Serializable {
@@ -11,20 +12,20 @@ public class User implements Serializable {
 	
 	private String name;
 	private String IPAddress;
-	private boolean isActive;
 	private List<String> friends;
+	private LocalDateTime lastConnection;
 	
-	public User(String name, String IPAddress, boolean isActive) {
+	public User(String name, String IPAddress) {
 		this.name = name;
 		this.IPAddress = IPAddress;
-		this.isActive = isActive;
+		this.lastConnection = LocalDateTime.now();
 		this.friends = new ArrayList<String>();
 	}
 	
 	public User(String name) {
 		this.name = name;
 		this.IPAddress = null;
-		this.isActive = false;
+		this.lastConnection = LocalDateTime.now();
 		this.friends = new ArrayList<String>();
 	}
 	
@@ -44,12 +45,12 @@ public class User implements Serializable {
 		this.IPAddress = IPAddress;
 	}
 	
-	public boolean isActive() {
-		return isActive;
+	public LocalDateTime getLastConnection() {
+		return lastConnection;
 	}
 	
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+	public void updateLastConnection() {
+		this.lastConnection = LocalDateTime.now();
 	}
 	
 	public List<String> getAllFriends() {
@@ -67,7 +68,7 @@ public class User implements Serializable {
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeUTF(name);
 		out.writeUTF(IPAddress);
-		out.writeBoolean(isActive);
+		out.writeObject(lastConnection);
 		out.writeObject(friends);
 	}
 	
@@ -75,7 +76,7 @@ public class User implements Serializable {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		name = in.readUTF();
 		IPAddress = in.readUTF();
-		isActive = in.readBoolean();
+		lastConnection = (LocalDateTime)in.readObject();
 		friends = (List<String>)in.readObject();
 	}
 }

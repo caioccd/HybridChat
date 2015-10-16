@@ -24,19 +24,49 @@ public class MainConnectionHandler implements IConnectionHandler {
     private ObjectOutputStream output;
 
     public MainConnectionHandler() {
-
         userDao = new UserDAOFile(Util.daoFilePath);
-
     }
 
     @Override
     public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {
-
         setupStreams(inputStream, outputStream);
 
+    	User user = null;
+    	String userName = null;
+    	String friendName = null;
         try {
-            User user = new User(input.readUTF(), IPAddress, true);
-            userDao.addUser(user);
+        	int command = input.readInt();
+        	switch (command) {
+    			case Util.GET_FRIENDS_LIST_COMMAND:
+    				userName = input.readUTF();
+    				
+    				if (!userDao.exists(userName)) {
+        	            userDao.addUser(new User(userName, IPAddress, true));
+    				}
+    				
+    				output.writeObject(userDao.getFriendsOf(userName));
+    			break;
+    			
+        		case Util.ADD_FRIEND_COMMAND:
+        			userName = input.readUTF();
+        			friendName = input.readUTF();
+        			
+        			user = userDao.getUser(userName);
+        			user.addFriend(friendName);
+        			
+        			userDao.updateUser(user);
+        		break;
+        		
+        		case Util.DELETE_FRIEND_COMMAND:
+        			userName = input.readUTF();
+        			friendName = input.readUTF();
+        			
+        			user = userDao.getUser(userName);
+        			user.removeFriend(friendName);
+        			
+        			userDao.updateUser(user);
+        		break;
+        	}
 
         } catch (IOException ex) {
             System.out.println("input feach info error" + ex.getMessage());
@@ -45,14 +75,12 @@ public class MainConnectionHandler implements IConnectionHandler {
     }
 
     private void setupStreams(InputStream inputStream, OutputStream outputStream) {
-
         try {
             output = new ObjectOutputStream(outputStream);
             output.flush();
             input = new ObjectInputStream(inputStream);
-
         } catch (IOException ex) {
-            System.out.println(" check input or output stream " + ex.getLocalizedMessage());
+            System.out.println("Check input or output stream " + ex.getLocalizedMessage());
         }
     }
     

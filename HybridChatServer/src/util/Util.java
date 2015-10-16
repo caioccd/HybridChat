@@ -7,8 +7,13 @@ package util;
 
 
 public class Util {
-    public static String SERVER_IP="127.0.0.1";
-    public static int SERVER_PORT=12345;
-    public static String daoFilePath="users.hyb";
+    public final static String SERVER_IP = "127.0.0.1";
+    public final static int SERVER_PORT = 12345;
     
+    public final static String daoFilePath = "users.hyb";
+    
+
+    public final static int GET_FRIENDS_LIST_COMMAND = 1;
+    public final static int ADD_FRIEND_COMMAND = 2;
+    public final static int DELETE_FRIEND_COMMAND = 3; 
 }
