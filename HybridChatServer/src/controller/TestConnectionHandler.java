@@ -9,7 +9,7 @@ public class TestConnectionHandler implements IConnectionHandler {
 		super();
 	}
 	
-	public void HandleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {		
+	public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {		
 		Scanner scanner = new Scanner(inputStream);
 		
 		while (scanner.hasNextLine()) {
