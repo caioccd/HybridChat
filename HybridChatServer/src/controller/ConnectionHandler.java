@@ -18,18 +18,11 @@ public class ConnectionHandler implements IConnectionHandler {
     public ConnectionHandler() {
         super();
     }
-  
-    //working here
-    public void handleConnection(Socket socket) {
-        try {
-            user = new User(socket.getInetAddress().getHostName(),socket.getPort(), socket.getKeepAlive());
-            
-            userDaoFile=new UserDAOFile(databaseFilePath);
-            
-            userDaoFile.addUser(user);
-            
-        } catch (SocketException ex) {
-            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    @Override
+    public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {
+       
     }
+  
+   
 }
