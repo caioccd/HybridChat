@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +32,6 @@ public class MainConnectionHandler implements IConnectionHandler {
     public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {
         setupStreams(inputStream, outputStream);
 
-    	User user = null;
     	String userName = null;
     	String friendName = null;
         try {
@@ -40,8 +40,11 @@ public class MainConnectionHandler implements IConnectionHandler {
     			case Util.GET_FRIENDS_LIST_COMMAND:
     				userName = input.readUTF();
     				
-    				if (!userDao.exists(userName)) {
-        	            userDao.addUser(new User(userName, IPAddress, true));
+    				if (userDao.exists(userName)) {
+    					userDao.getUser(userName).updateLastConnection();
+    				}
+    				else {
+        	            userDao.addUser(new User(userName, IPAddress));
     				}
     				
     				output.writeObject(userDao.getFriendsOf(userName));
@@ -50,26 +53,20 @@ public class MainConnectionHandler implements IConnectionHandler {
         		case Util.ADD_FRIEND_COMMAND:
         			userName = input.readUTF();
         			friendName = input.readUTF();
-        			
-        			user = userDao.getUser(userName);
-        			user.addFriend(friendName);
-        			
-        			userDao.updateUser(user);
+
+        			userDao.updateUser(userDao.getUser(userName).addFriend(friendName).updateLastConnection());
         		break;
         		
         		case Util.DELETE_FRIEND_COMMAND:
         			userName = input.readUTF();
         			friendName = input.readUTF();
         			
-        			user = userDao.getUser(userName);
-        			user.removeFriend(friendName);
-        			
-        			userDao.updateUser(user);
+        			userDao.updateUser(userDao.getUser(userName).removeFriend(friendName).updateLastConnection());
         		break;
         	}
 
-        } catch (IOException ex) {
-            System.out.println("input feach info error" + ex.getMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
         }
 
     }
@@ -79,8 +76,8 @@ public class MainConnectionHandler implements IConnectionHandler {
             output = new ObjectOutputStream(outputStream);
             output.flush();
             input = new ObjectInputStream(inputStream);
-        } catch (IOException ex) {
-            System.out.println("Check input or output stream " + ex.getLocalizedMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
         }
     }
     

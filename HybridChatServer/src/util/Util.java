@@ -12,6 +12,7 @@ public class Util {
     
     public final static String daoFilePath = "users.hyb";
     
+    public final static int TIME_OUT_SECONDS = 30;
 
     public final static int GET_FRIENDS_LIST_COMMAND = 1;
     public final static int ADD_FRIEND_COMMAND = 2;
