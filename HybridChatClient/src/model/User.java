@@ -33,36 +33,41 @@ public class User implements Serializable {
 		return name;
 	}
 	
-	public void setName(String name) {
+	public User setName(String name) {
 		this.name = name;
+		return this;
 	}
 	
 	public String getIPAddress() {
 		return IPAddress;
 	}
 	
-	public void setIPAddress(String IPAddress) {
+	public User setIPAddress(String IPAddress) {
 		this.IPAddress = IPAddress;
+		return this;
 	}
 	
 	public LocalDateTime getLastConnection() {
 		return lastConnection;
 	}
 	
-	public void updateLastConnection() {
+	public User updateLastConnection() {
 		this.lastConnection = LocalDateTime.now();
+		return this;
 	}
 	
 	public List<String> getAllFriends() {
 		return friends;
 	}
 	
-	public void addFriend(String name) {
+	public User addFriend(String name) {
 		friends.add(name);
+		return this;
 	}
 	
-	public void removeFriend(String name) {
+	public User removeFriend(String name) {
 		friends.remove(name);
+		return this;
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {

@@ -28,7 +28,6 @@ public class MainConnectionHandler implements IConnectionHandler {
         userDao = new UserDAOFile(Util.daoFilePath);
     }
 
-    @Override
     public void handleConnection(String IPAddress, InputStream inputStream, OutputStream outputStream) {
         setupStreams(inputStream, outputStream);
 
@@ -54,14 +53,20 @@ public class MainConnectionHandler implements IConnectionHandler {
         			userName = input.readUTF();
         			friendName = input.readUTF();
 
-        			userDao.updateUser(userDao.getUser(userName).addFriend(friendName).updateLastConnection());
+        			if (userDao.exists(userName) && userDao.exists(friendName)) {
+        				userDao.updateUser(userDao.getUser(userName).addFriend(friendName).updateLastConnection());
+        				userDao.updateUser(userDao.getUser(friendName).addFriend(userName).updateLastConnection());
+        			}
         		break;
         		
         		case Util.DELETE_FRIEND_COMMAND:
         			userName = input.readUTF();
         			friendName = input.readUTF();
         			
-        			userDao.updateUser(userDao.getUser(userName).removeFriend(friendName).updateLastConnection());
+        			if (userDao.exists(userName) && userDao.exists(friendName)) {	
+        				userDao.updateUser(userDao.getUser(userName).removeFriend(friendName).updateLastConnection());
+        				userDao.updateUser(userDao.getUser(friendName).removeFriend(userName).updateLastConnection());
+        			}
         		break;
         	}
 
