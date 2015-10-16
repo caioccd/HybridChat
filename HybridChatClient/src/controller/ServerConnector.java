@@ -30,15 +30,4 @@ public class ServerConnector {
             System.err.println("An error ocurred while closing a client socket.");
         }
     }
-
-    public void sendKeepAliveMessageToServer(boolean keepAlive) {
-        try {
-            ObjectOutputStream output = new ObjectOutputStream(getOutputStream());
-            output.flush();
-            output.writeObject(keepAlive);
-            output.flush();
-        } catch (IOException e) {
-
-        }
-    }
 }

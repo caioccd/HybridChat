@@ -17,9 +17,7 @@ public class UserDAOFile implements IUserDAO, Serializable {
 	    	inputStream = new ObjectInputStream(new FileInputStream(databaseFilePath));
 			readObject(inputStream);
 			inputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

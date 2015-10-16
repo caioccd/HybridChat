@@ -22,7 +22,7 @@ public class ConnectionHandler implements IConnectionHandler {
     //working here
     public void handleConnection(Socket socket) {
         try {
-            user =new User(null, socket.getInetAddress().getHostName(),socket.getPort(), socket.getKeepAlive());
+            user = new User(socket.getInetAddress().getHostName(),socket.getPort(), socket.getKeepAlive());
             
             userDaoFile=new UserDAOFile(databaseFilePath);
             

@@ -8,7 +8,6 @@ public class ConnectionListener implements Runnable {
     private ServerSocket serverSocket;
     private IConnectionHandler connectionHandler;
     private boolean keepListening;
-    private ObjectInputStream input;
 
     public ConnectionListener(int port, IConnectionHandler connectionHandler) {
         try {
@@ -26,13 +25,11 @@ public class ConnectionListener implements Runnable {
 
                 Socket socket = serverSocket.accept();
 
-                socket.setKeepAlive(getKeepAliveFromClientStream(socket));//bind client´s keepAlive to its socket
-
-                connectionHandler.handleConnection(socket);
+                connectionHandler.handleConnection(socket.getInetAddress().getHostAddress(), socket.getInputStream(), socket.getOutputStream());
 
                 socket.close();
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             stop();
             System.err.println("An error ocurred while accepting a connection.");
         } finally {
@@ -46,11 +43,5 @@ public class ConnectionListener implements Runnable {
 
     public void stop() {
         keepListening = false;
-    }
-
-    //get from client a keepAlive message 
-    public boolean getKeepAliveFromClientStream(Socket socket) throws ClassNotFoundException, IOException {
-        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-        return (boolean) input.readObject();
     }
 }
