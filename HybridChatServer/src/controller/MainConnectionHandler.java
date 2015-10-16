@@ -56,25 +56,6 @@ public class MainConnectionHandler implements IConnectionHandler {
         }
     }
 
-    public List<User> myFriends(String name) {
-        return userDao.getFriendsOf(name);
-
-    }
-
-    public User getUser(String name) {
-        return userDao.getUser(name);
-    }
-
-    public void updateUser(User user) {
-        userDao.updateUser(user);
-    }
-
-    public void addUser(User user) {
-        userDao.addUser(user);
-    }
-
-    public void deleteUser(String name) {
-        userDao.deleteUser(name);
-    }
+   
 
 }
