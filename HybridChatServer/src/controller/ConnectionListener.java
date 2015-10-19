@@ -12,6 +12,7 @@ public class ConnectionListener implements Runnable {
     public ConnectionListener(int port, IConnectionHandler connectionHandler) {
         try {
             this.serverSocket = new ServerSocket(port);
+            
             this.serverSocket.setSoTimeout(3600000);
             this.connectionHandler = connectionHandler;
         } catch (IOException e) {
@@ -24,7 +25,7 @@ public class ConnectionListener implements Runnable {
         try {
             while (keepListening) {
                 Socket socket = serverSocket.accept();
-
+                
                 connectionHandler.handleConnection(socket.getInetAddress().getHostAddress(), socket.getInputStream(), socket.getOutputStream());
 
                 socket.close();
